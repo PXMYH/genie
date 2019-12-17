@@ -5,7 +5,7 @@ var util = require('util');
 
 /* GET file listing. */
 router.get('/', function(req, res, next) {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/upload.html');
 });
 
 router.get('/files', function(req, res, next) {
@@ -29,6 +29,7 @@ router.get('/files', function(req, res, next) {
 
 function parseFile(result) {
   var projects = {};
+  var projectList = [];
 
   console.info('processing sheet content ...');
   // get keys
@@ -59,6 +60,7 @@ function parseFile(result) {
         // 机械使用费(40105)金额
         // 分包成本(40106)金额
         var expenses = {};
+        expenses['projectName'] = projectName;
         expenses['human'] = result[sheetName][i][5];
         expenses['material'] = result[sheetName][i][6];
         expenses['direct'] = result[sheetName][i][7];
@@ -71,16 +73,18 @@ function parseFile(result) {
         //     expenses: expenses
         //   })} to project ${projectName}`
         // );
-        projects[projectName] = expenses;
-        console.debug(
-          `final project structure ${util.inspect({
-            projects: projects
-          })}`
-        );
+        projectList.push(expenses);
+
+        // console.debug(
+        //   `final project structure ${util.inspect({
+        //     projects: projects
+        //   })}`
+        // );
       }
     }
   });
 
+  projects = projectList;
   return projects;
 }
 
@@ -91,14 +95,6 @@ router.post('/', (req, res, next) => {
   form.encoding = 'utf-8';
 
   form.parse(req, (err, fields, files) => {
-    // uncomment the below code block to inspect object passed in
-    // res.end(
-    //   util.inspect({
-    //     fields: fields,
-    //     files: files
-    //   })
-    // );
-
     // require xlsx module
     if (typeof require !== 'undefined') {
       XLSX = require('xlsx');
@@ -107,9 +103,13 @@ router.post('/', (req, res, next) => {
     console.debug(`file path is ${JSON.stringify(files)}`);
 
     // parse the file uploaded
-    var workbook = XLSX.readFile(files.upload.path);
+    var workbook = XLSX.readFile(files.file.path);
     var result = {};
-    console.debug(`read workbook finished. workbook: ${workbook}`);
+    console.debug(
+      `read workbook finished. workbook: ${util.inspect({
+        workbook: workbook
+      })}`
+    );
 
     workbook.SheetNames.forEach(function(sheetName) {
       console.debug(`Sheetname = ${sheetName}`);
@@ -119,7 +119,7 @@ router.post('/', (req, res, next) => {
       console.debug(`Sheet content:\n ${content}`);
       if (content.length) result[sheetName] = content;
     });
-
+    // res.end();
     res.send(JSON.stringify(parseFile(result), 2, 2));
   });
 });
