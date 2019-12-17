@@ -29,8 +29,6 @@ router.get('/files', function(req, res, next) {
 
 function parseFile(result) {
   var projects = {};
-  var projectNames = [];
-  var expenses = {};
 
   console.info('processing sheet content ...');
   // get keys
@@ -46,36 +44,44 @@ function parseFile(result) {
     for (var i = 1; i < result[sheetName].length; i++) {
       // the first row will have the project name
       if (result[sheetName][i][0] != undefined) {
-        console.debug(
-          `pushing ${result[sheetName][i][0]} to porject names ...`
-        );
-        projectNames.push(
-          result[sheetName][i][0].replace(/(^\s*)|(\s*$)/g, '')
-        );
+        projectName = result[sheetName][i][0].replace(/(^\s*)|(\s*$)/g, '');
+        console.debug(`current project is ${projectName}`);
       }
 
       // if "统计方式" is "期末", then extract the expense amount
       console.debug(`result[sheetName][${i}][2] = ${result[sheetName][i][2]}`);
       if (result[sheetName][i][2] == '期末') {
-        console.debug(`pushing the expense amount ...`);
-        // get individual expense
+        // get individual expenses
         // 人工费(40101)金额
         // 材料费(40102)金额
         // 其他直接费(40103)金额
         // 间接费用(40104)金额
         // 机械使用费(40105)金额
         // 分包成本(40106)金额
-        expenses['human'] = result[sheetName][i][4];
-        expenses['material'] = result[sheetName][i][5];
-        expenses['direct'] = result[sheetName][i][6];
-        expenses['indirect'] = result[sheetName][i][7];
-        expenses['machinary'] = result[sheetName][i][8];
-        expenses['subcontract'] = result[sheetName][i][9];
-        console.debug(`${util.inspect({ expenses: expenses })}`);
+        var expenses = {};
+        expenses['human'] = result[sheetName][i][5];
+        expenses['material'] = result[sheetName][i][6];
+        expenses['direct'] = result[sheetName][i][7];
+        expenses['indirect'] = result[sheetName][i][8];
+        expenses['machinary'] = result[sheetName][i][9];
+        expenses['subcontract'] = result[sheetName][i][10];
+
+        // console.debug(
+        //   `adding expenses ${util.inspect({
+        //     expenses: expenses
+        //   })} to project ${projectName}`
+        // );
+        projects[projectName] = expenses;
+        console.debug(
+          `final project structure ${util.inspect({
+            projects: projects
+          })}`
+        );
       }
     }
-    console.debug(`project names are ${projectNames}`);
   });
+
+  return projects;
 }
 
 router.post('/', (req, res, next) => {
@@ -113,8 +119,8 @@ router.post('/', (req, res, next) => {
       console.debug(`Sheet content:\n ${content}`);
       if (content.length) result[sheetName] = content;
     });
-    res.send(JSON.stringify(result, 2, 2));
-    parseFile(result);
+
+    res.send(JSON.stringify(parseFile(result), 2, 2));
   });
 });
 
