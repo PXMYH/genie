@@ -28,8 +28,11 @@ router.get('/files', function(req, res, next) {
 });
 
 function parseFile(result) {
-  var projectName = [];
-  console.debug('processing sheet content ...');
+  var projects = {};
+  var projectNames = [];
+  var expenses = {};
+
+  console.info('processing sheet content ...');
   // get keys
   sheetNames = Object.keys(result);
   console.debug(`sheet names: ${sheetNames}`);
@@ -46,12 +49,32 @@ function parseFile(result) {
         console.debug(
           `pushing ${result[sheetName][i][0]} to porject names ...`
         );
-        projectName.push(result[sheetName][i][0].replace(/(^\s*)|(\s*$)/g, ''));
+        projectNames.push(
+          result[sheetName][i][0].replace(/(^\s*)|(\s*$)/g, '')
+        );
+      }
+
+      // if "统计方式" is "期末", then extract the expense amount
+      console.debug(`result[sheetName][${i}][2] = ${result[sheetName][i][2]}`);
+      if (result[sheetName][i][2] == '期末') {
+        console.debug(`pushing the expense amount ...`);
+        // get individual expense
+        // 人工费(40101)金额
+        // 材料费(40102)金额
+        // 其他直接费(40103)金额
+        // 间接费用(40104)金额
+        // 机械使用费(40105)金额
+        // 分包成本(40106)金额
+        expenses['human'] = result[sheetName][i][4];
+        expenses['material'] = result[sheetName][i][5];
+        expenses['direct'] = result[sheetName][i][6];
+        expenses['indirect'] = result[sheetName][i][7];
+        expenses['machinary'] = result[sheetName][i][8];
+        expenses['subcontract'] = result[sheetName][i][9];
+        console.debug(`${util.inspect({ expenses: expenses })}`);
       }
     }
-    console.debug(`project names are ${projectName}`);
-
-    // get term end amount
+    console.debug(`project names are ${projectNames}`);
   });
 }
 
