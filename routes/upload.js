@@ -88,6 +88,41 @@ function parseFile(result) {
   return projects;
 }
 
+function json2table(json, classes) {
+  var cols = Object.keys(json[0]);
+  var headerRow = '';
+  var bodyRows = '';
+
+  classes = classes || '';
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  cols.map(function(col) {
+    headerRow += '<th>' + capitalizeFirstLetter(col) + '</th>';
+  });
+
+  json.map(function(row) {
+    bodyRows += '<tr>';
+    cols.map(function(colName) {
+      bodyRows += '<td>' + row[colName] + '<td>';
+    });
+
+    bodyRows += '</tr>';
+  });
+
+  return (
+    '<table class="' +
+    classes +
+    '"><thead><tr>' +
+    headerRow +
+    '</tr></thead><tbody>' +
+    bodyRows +
+    '</tbody></table>'
+  );
+}
+
 router.post('/', (req, res, next) => {
   // parse a file uploaded
   var form = new formidable.IncomingForm();
@@ -119,8 +154,8 @@ router.post('/', (req, res, next) => {
       console.debug(`Sheet content:\n ${content}`);
       if (content.length) result[sheetName] = content;
     });
-    // res.end();
-    res.send(JSON.stringify(parseFile(result), 2, 2));
+    res.send(json2table(parseFile(result), 2, 2));
+    // res.send(JSON.stringify(parseFile(result), 2, 2));
   });
 });
 
