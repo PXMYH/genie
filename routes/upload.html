@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Engineering Overview</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!-- use jQuery + ajax to dynamically display table -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+      console.debug(`inside script ...`);
+      $(function() {
+        $('button').click(function() {
+          $('p').text('Hello');
+        });
+      });
+
+      $('form#uploadForm').submit(function(event) {
+        var formData = new FormData(this);
+        console.debug(`form Data = ${formData}`);
+        // formData.append('uploadFiles', $('[name="file"]')[0].files[0]);
+        event.stopPropagation();
+        event.preventDefault();
+        $.ajax({
+          url: window.location.pathname,
+          data: formData,
+          processData: false,
+          contentType: false,
+          type: 'POST',
+          success: function(data) {
+            console.log(data);
+            // loadFiles();
+          }
+        });
+        return false;
+      });
+    </script> -->
+  </head>
+
+  <body>
+    <form
+      id="uploadForm"
+      action="/upload"
+      enctype="multipart/form-data"
+      method="post"
+    >
+      <input type="file" name="file" id="uploadFiles" multiple="multiple" />
+      <br />
+      <input type="submit" value="Upload" />
+    </form>
+    <button>Click me!</button>
+    <p></p>
+  </body>
+</html>
