@@ -114,7 +114,7 @@ function json2table(json, classes) {
   });
 
   return (
-    '<table border="1" class="' +
+    '<table border="1" cellspacing="0" class="' +
     classes +
     '"><thead><tr>' +
     headerRow +
