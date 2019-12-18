@@ -60,13 +60,13 @@ function parseFile(result) {
         // 机械使用费(40105)金额
         // 分包成本(40106)金额
         var expenses = {};
-        expenses['projectName'] = projectName;
-        expenses['human'] = result[sheetName][i][5];
-        expenses['material'] = result[sheetName][i][6];
-        expenses['direct'] = result[sheetName][i][7];
-        expenses['indirect'] = result[sheetName][i][8];
-        expenses['machinary'] = result[sheetName][i][9];
-        expenses['subcontract'] = result[sheetName][i][10];
+        expenses[categories[0]] = projectName;
+        expenses[categories[5]] = result[sheetName][i][5];
+        expenses[categories[6]] = result[sheetName][i][6];
+        expenses[categories[7]] = result[sheetName][i][7];
+        expenses[categories[8]] = result[sheetName][i][8];
+        expenses[categories[9]] = result[sheetName][i][9];
+        expenses[categories[10]] = result[sheetName][i][10];
 
         // console.debug(
         //   `adding expenses ${util.inspect({
@@ -106,7 +106,7 @@ function json2table(json, classes) {
   json.map(function(row) {
     bodyRows += '<tr>';
     cols.map(function(colName) {
-      bodyRows += '<td>' + row[colName] + '<td>';
+      bodyRows += '<td>' + row[colName] + '</td>';
     });
 
     bodyRows += '</tr>';
