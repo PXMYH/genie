@@ -50,7 +50,7 @@ function parseFile(result) {
       }
 
       // if "统计方式" is "期末", then extract the expense amount
-      console.debug(`result[sheetName][${i}][2] = ${result[sheetName][i][2]}`);
+      // console.debug(`result[sheetName][${i}][2] = ${result[sheetName][i][2]}`);
       if (result[sheetName][i][2] == '期末') {
         // get individual expenses
         // 人工费(40101)金额
@@ -106,14 +106,14 @@ function json2table(json, classes) {
   json.map(function(row) {
     bodyRows += '<tr>';
     cols.map(function(colName) {
-      bodyRows += '<td>' + row[colName] + '</td>';
+      bodyRows += '<td align="center">' + row[colName] + '</td>';
     });
 
     bodyRows += '</tr>';
   });
 
   return (
-    '<table class="' +
+    '<table border="1" class="' +
     classes +
     '"><thead><tr>' +
     headerRow +
@@ -154,7 +154,7 @@ router.post('/', (req, res, next) => {
       console.debug(`Sheet content:\n ${content}`);
       if (content.length) result[sheetName] = content;
     });
-    res.send(json2table(parseFile(result), 2, 2));
+    res.send(json2table(parseFile(result), 'w3-table w3-bordered'), 2, 2);
     // res.send(JSON.stringify(parseFile(result), 2, 2));
   });
 });
