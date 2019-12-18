@@ -1,0 +1,10 @@
+extends layout
+
+block header
+  meta(http-equiv="content-type" content="text/html; charset=UTF-8")
+
+block content
+  form#uploadForm(action="/upload" enctype="multipart/form-data" method="post")
+    input#uploadFiles(type="file" name="file" multiple="multiple")
+    br
+    input(type="submit" value="Upload")

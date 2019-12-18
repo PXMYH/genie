@@ -5,7 +5,8 @@ var util = require('util');
 
 /* GET file listing. */
 router.get('/', function(req, res, next) {
-  res.sendFile(__dirname + '/upload.html');
+  // res.sendFile(__dirname + '/upload.html');
+  res.render('upload', { title: 'Engineering Overview' });
 });
 
 router.get('/files', function(req, res, next) {
