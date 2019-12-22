@@ -4,7 +4,12 @@ block header
   meta(http-equiv="content-type" content="text/html; charset=UTF-8")
 
 block content
+  script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js', integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n', crossorigin='anonymous')
+  script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
+  script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
+  script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/2.1.0/bootstrap-filestyle.js', integrity='sha256-X1IDNCiaH2URW+Q73Zwq2mM3uB2jcoaUgNAzUEzCfNs=', crossorigin='anonymous')
+
   form#uploadForm(action="/upload" enctype="multipart/form-data" method="post")
-    input#uploadFiles(type="file" name="file" multiple="multiple")
+    input#uploadFiles(type="file" name="file" multiple="multiple" class="filestyle" data-dragdrop="false" data-btnClass="btn-primary" data-size="sm" data-input="true" data-text="选择文件" data-placeholder="未有文件选中")
     br
-    input(type="submit" value="Upload")
+    input(type="submit" value="上传")
