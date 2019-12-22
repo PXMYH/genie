@@ -31,6 +31,7 @@ router.get('/files', function(req, res, next) {
 function parseFile(result) {
   var projects = {};
   var projectList = [];
+  var excludeRegEx = '^20(1|2).?\\(\\d*\\)';
 
   console.info('processing sheet content ...');
   // get keys
@@ -48,6 +49,11 @@ function parseFile(result) {
       if (result[sheetName][i][0] != undefined) {
         projectName = result[sheetName][i][0].replace(/(^\s*)|(\s*$)/g, '');
         console.debug(`current project is ${projectName}`);
+      }
+
+      if (projectName.match(excludeRegEx)) {
+        console.debug(`matching exclusion found: ${projectName}`);
+        continue;
       }
 
       // if "统计方式" is "期末", then extract the expense amount
